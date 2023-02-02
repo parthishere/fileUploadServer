@@ -3,7 +3,8 @@ from .models import File
 from app.serializers import FileSerializer
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework import authentication
 
 
 class FileView(APIView):
@@ -13,8 +14,9 @@ class FileView(APIView):
     * Requires token authentication.
     * Only admin users are able to access this view.
     """
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     serializer_class = FileSerializer
+    authentication_classes = (authentication.BasicAuthentication,)
 
     def get(self, request, format=None):
         """
@@ -27,7 +29,10 @@ class FileView(APIView):
         print(request.FILES)
         data = FileSerializer(data=request.data)
         if data.is_valid():
-            data.save()
+            data.user = request.user
+            print(request.user)
+            data.save(user=request.user)
+
         else:
             return Response({"err": "err"})
 
