@@ -25,8 +25,20 @@ class FileView(APIView):
         return Response(FileSerializer(File.objects.all(), many=True).data)
 
     def post(self, request):
+        print()
+        print("data")
         print(request.data)
+        print("Files")
         print(request.FILES)
+        print("Request")
+        print(request)
+        print("USer")
+        print(request.user)
+        print("Authorization header")
+        print(request.headers.get('Authorization'))
+        print("Meta")
+        print(request.META)
+        print()
         data = FileSerializer(data=request.data)
         if data.is_valid():
             data.user = request.user
