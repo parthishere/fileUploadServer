@@ -232,3 +232,8 @@ OGGING = {
         }
     }
 }
+
+# import logging
+# logging.dictConfig(LOGGING)
+# logger = logging.getLogger('MYAPP')
+# logger.info("Just testing")
