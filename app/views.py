@@ -14,9 +14,9 @@ class FileView(APIView):
     * Requires token authentication.
     * Only admin users are able to access this view.
     """
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
     serializer_class = FileSerializer
-    authentication_classes = (authentication.BasicAuthentication,)
+    # authentication_classes = (authentication.BasicAuthentication,)
 
     def get(self, request, format=None):
         """
