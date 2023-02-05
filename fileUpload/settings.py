@@ -175,3 +175,59 @@ MEDIA_ROOT = MEDIA_DIR
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "{asctime} {levelname} : {filename} line - {lineno:d} : {message}",
+            "style": "{",
+            "datefmt": "%Y-%m-%d %H:%M:%S",
+        },
+    },
+    "filters": {
+        "require_debug_false": {
+            "()": "django.utils.log.RequireDebugFalse",
+        },
+        "require_debug_true": {
+            "()": "django.utils.log.RequireDebugTrue",
+        },
+    },
+    "handlers": {
+        "console": {
+            "level": "INFO",
+            "filters": ["require_debug_true"],
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
+        },
+        "production": {
+            "level": "INFO",
+            "filters": ["require_debug_false"],
+            "class": "logging.handlers.RotatingFileHandler",
+            "formatter": "verbose",
+        },
+        "development": {
+            "level": "INFO",
+            "filters": ["require_debug_true"],
+            "formatter": "verbose",
+        },
+        "task_handler": {
+            "level": "INFO",
+            "class": "logging.handlers.RotatingFileHandler",
+            "formatter": "verbose",
+        },
+    },
+    "loggers": { 
+        'gunicorn.access' : 
+            { 'level': 'DEBUG',
+             'handlers': ['production', 'console'],
+             'propagate':False
+             }
+    },
+    "root": {
+        "handlers": ["production", "development"],
+        "level": "INFO",
+        "propagate": False,
+    },
+}
