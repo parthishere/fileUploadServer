@@ -14,6 +14,10 @@ from pathlib import Path
 import dotenv
 import os
 
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
+SECURE_SSL_REDIRECT = False
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 STATIC_DIR = os.path.join(BASE_DIR, "static")
@@ -40,6 +44,9 @@ DATA_UPLOAD_MAX_NUMBER_FIELDS = 10240
 
 
 # Application definition
+CSRF_TRUSTED_ORIGINS = [
+    'https://fileuploads.up.railway.app'
+]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -49,6 +56,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    "sslserver",
     "app",
 
 ]
