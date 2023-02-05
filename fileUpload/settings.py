@@ -176,58 +176,59 @@ MEDIA_ROOT = MEDIA_DIR
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "formatters": {
-        "verbose": {
-            "format": "{asctime} {levelname} : {filename} line - {lineno:d} : {message}",
-            "style": "{",
-            "datefmt": "%Y-%m-%d %H:%M:%S",
+OGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
         },
     },
-    "filters": {
-        "require_debug_false": {
-            "()": "django.utils.log.RequireDebugFalse",
+    'filters': {
+        'special': {
+            '()': 'project.logging.SpecialFilter',
+            'foo': 'bar',
         },
-        "require_debug_true": {
-            "()": "django.utils.log.RequireDebugTrue",
-        },
-    },
-    "handlers": {
-        "console": {
-            "level": "INFO",
-            "filters": ["require_debug_true"],
-            "class": "logging.StreamHandler",
-            "formatter": "verbose",
-        },
-        "production": {
-            "level": "INFO",
-            "filters": ["require_debug_false"],
-            "class": "logging.handlers.RotatingFileHandler",
-            "formatter": "verbose",
-        },
-        "development": {
-            "level": "INFO",
-            "filters": ["require_debug_true"],
-            "formatter": "verbose",
-        },
-        "task_handler": {
-            "level": "INFO",
-            "class": "logging.handlers.RotatingFileHandler",
-            "formatter": "verbose",
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
         },
     },
-    "loggers": { 
-        'gunicorn.access' : 
-            { 'level': 'DEBUG',
-             'handlers': ['production', 'console'],
-             'propagate':False
-             }
+    'handlers': {
+        'console': {
+            'level': 'INFO',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
+        },
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler',
+            'filters': ['special']
+        },
+        'null': {
+            'level': 'DEBUG',
+            'class': 'logging.NullHandler',
+        },
     },
-    "root": {
-        "handlers": ["production", "development"],
-        "level": "INFO",
-        "propagate": False,
-    },
+    'loggers': {
+        'django': {
+            'handlers': ['console', ],
+            'propagate': True,
+        },
+        'django.request': {
+            'handlers': ['mail_admins'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+        'myproject.custom': {
+            'handlers': ['console', 'mail_admins'],
+            'level': 'INFO',
+            'filters': ['special']
+        }
+    }
 }
